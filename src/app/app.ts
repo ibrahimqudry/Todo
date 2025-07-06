@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { TodosPage } from "./todos-page/todos-page";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports:  [TodosPage],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

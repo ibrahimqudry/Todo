@@ -1,0 +1,76 @@
+<section class="todo-section">
+    <!-- Add New Task Button -->
+    <button class="add-task-btn" (click)="openDialog()">Add New Task</button>
+
+    <!-- Confirmation Dialog -->
+    <p-confirmDialog></p-confirmDialog>
+
+    <!-- Add Todo Dialog -->
+    <p-dialog header="Add New Todo" [(visible)]="addTodoDialogVisible" [modal]="true" [closable]="true">
+        <form (ngSubmit)="addTodo(title, completed)" #addTodoForm="ngForm">
+            <div class="p-field">
+                <label for="title">Title</label>
+                <input id="title" type="text" pInputText [(ngModel)]="title" name="title" required />
+                <small *ngIf="addTodoForm.submitted && !title" class="p-error">Title is required.</small>
+            </div>
+            <div class="p-field-checkbox">
+                <p-checkbox inputId="completed" [(ngModel)]="completed" name="completed" binary="true" required
+                    class="checkbox"></p-checkbox>
+                <label for="completed" class="styled-label">Completed</label>
+            </div>
+            <div class="p-dialog-footer">
+                <button type="button" pButton label="Cancel" (click)="closeDialog()" class="cancel-btn"></button>
+                <button type="submit" pButton label="Add" [disabled]="!addTodoForm.valid" class="add-btn"></button>
+            </div>
+        </form>
+    </p-dialog>
+
+    <!-- Edit Todo Dialog -->
+    <p-dialog header="Edit Todo Title" [(visible)]="editTodoDialogVisible" [modal]="true" [closable]="true">
+        <form (ngSubmit)="updateTodoTitle(title)" #editTodoForm="ngForm">
+            <div class="p-field">
+                <label for="editTitle">Title</label>
+                <input id="editTitle" type="text" pInputText [(ngModel)]="title" name="editTitle" required />
+                <small *ngIf="editTodoForm.submitted && !title" class="p-error">Title is required.</small>
+            </div>
+            <div class="p-dialog-footer">
+                <button type="button" pButton label="Cancel" (click)="closeDialog()" class="cancel-btn"></button>
+                <button type="submit" pButton label="Update Title" [disabled]="!editTodoForm.valid"
+                    class="update-btn"></button>
+            </div>
+        </form>
+    </p-dialog>
+
+    <!-- Todos Table -->
+    <p-table [value]="todos" [tableStyle]="{ 'min-width': '50rem' }" class="todo-table">
+        <ng-template #header>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Completed</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-todo>
+            <tr>
+                <td>{{ todo.id }}</td>
+                <td>{{ todo.title }}</td>
+                <td class="checkbox-td">
+                    <p-checkbox [binary]="true" [ngModel]="todo.completed"
+                        (onChange)="updateTodoCompleted(todo, $event.checked)" class="checkbox"></p-checkbox>
+                </td>
+                <td>{{ todo.completed ? 'Completed' : 'Pending' }}</td>
+                <td>
+                    <button type="button" class="edit-btn" (click)="openEditingDialog(todo)">
+                        <i class="pi pi-pencil"></i>
+                    </button>
+                    <button type="button" class="delete-btn" (click)="deleteTodo(todo.id)">
+                        <i class="pi pi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</section>
+

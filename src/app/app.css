@@ -1,0 +1,7 @@
+main {
+    text-align: center;
+    padding: 20px;
+}
+main > h1{
+    color: #007BFF;
+}
