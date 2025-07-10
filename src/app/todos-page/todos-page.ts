@@ -12,14 +12,14 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-todos-page',
   standalone: true,
-  imports: [CommonModule,ButtonModule, TableModule, DialogModule, CheckboxModule, FormsModule, ConfirmDialogModule],
+  imports: [CommonModule, ButtonModule, TableModule, DialogModule, CheckboxModule, FormsModule, ConfirmDialogModule],
   templateUrl: './todos-page.html',
   styleUrl: './todos-page.css',
   providers: [ConfirmationService]
 })
 
 export class TodosPage {
- 
+
   // Define the properties for the component
   todoService = inject(TodoService);
   confirmationService = inject(ConfirmationService);
@@ -36,14 +36,21 @@ export class TodosPage {
     this.loadTodos();
   }
 
-  async loadTodos() {
-    this.todos = await this.todoService.getTodos();
+  loadTodos() {
+    this.todoService.getTodos().subscribe(
+      {
+        next: (res) => { this.todos = res; },
+        error: (err) => {
+          console.error('Error fetching todos:', err);
+        }
+      }
+    );
   }
 
 
 
 
-  
+
   // Methods to handle adding, updating, and deleting todos
   // These methods will interact with the TodoService to perform CRUD operations
   // and update the local todos array accordingly
@@ -57,7 +64,7 @@ export class TodosPage {
         next: (todo) => {
           const newTodo = {
             ...todo,
-            id: this.todos.length + 1,
+            id: this.todos[this.todos.length - 1].id + 1,
           };
           this.todos.push(newTodo);
         },
@@ -83,7 +90,7 @@ export class TodosPage {
     else {
       this.todoService.updateTodo(updatedTodo).subscribe({
         next: (res) => {
-          todo.completed = completed;
+          todo.completed = res.completed;
         },
         error: (err) => {
           console.error('Error updating todo:', err);

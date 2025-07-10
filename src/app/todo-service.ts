@@ -11,10 +11,13 @@ export class TodoService {
 
   // This method fetches todos from the API and returns a promise that resolves to an array of todos.
 
-  async getTodos() {
-    const response = await fetch(this.url);
-    const json = await response.json();
-    return json;
+  getTodos() {
+    return this.http.get<Todo[]>(this.url, {
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    }
+    );
   }
 
   // This method posts a new todo to the API and returns an observable that emits the created todo.
